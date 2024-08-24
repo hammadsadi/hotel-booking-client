@@ -3,7 +3,7 @@ import toastAlert from "../../utils/toastAlert";
 import useAuth from "../../hooks/useAuth";
 
 const Login = () => {
-  const { signIn } = useAuth();
+  const { signIn, signInWithGoogle } = useAuth();
   const navigate = useNavigate();
   const handleSubmitForm = async (e) => {
     e.preventDefault();
@@ -24,6 +24,16 @@ const Login = () => {
       toastAlert(error.message, "error");
     }
   };
+
+  // Handle Login With Google
+  const handleGoogleLogin = async () => {
+    const resUser = await signInWithGoogle();
+    if (resUser.user) {
+      toastAlert("User Login Successful", "success");
+      navigate("/");
+    }
+  };
+
   return (
     <div className="w-full h-screen flex justify-center items-center">
       <div className="w-full max-w-md p-4 rounded-md shadow sm:p-8 bg-white text-gray-800">
@@ -35,7 +45,8 @@ const Login = () => {
           <button
             aria-label="Login with Google"
             type="button"
-            className="flex items-center justify-center w-full p-4 space-x-4 border rounded-md focus:ring-2 focus:ring-offset-1 border-gray-400 focus:ring-violet-400"
+            onClick={handleGoogleLogin}
+            className="flex items-center justify-center w-full p-4 space-x-4 border rounded-md focus:ring-2 focus:ring-offset-1 border-gray-400"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"

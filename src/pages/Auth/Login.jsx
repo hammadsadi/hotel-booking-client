@@ -1,6 +1,29 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import toastAlert from "../../utils/toastAlert";
+import useAuth from "../../hooks/useAuth";
 
 const Login = () => {
+  const { signIn } = useAuth();
+  const navigate = useNavigate();
+  const handleSubmitForm = async (e) => {
+    e.preventDefault();
+    const form = e.target;
+    const email = form.email.value;
+    const password = form.password.value;
+
+    // Validation
+    if (!email || !password)
+      return toastAlert("All Fields Are Required", "error");
+    try {
+      const resUser = await signIn(email, password);
+      if (resUser.user) {
+        toastAlert("User Login Successful", "success");
+        navigate("/");
+      }
+    } catch (error) {
+      toastAlert(error.message, "error");
+    }
+  };
   return (
     <div className="w-full h-screen flex justify-center items-center">
       <div className="w-full max-w-md p-4 rounded-md shadow sm:p-8 bg-white text-gray-800">
@@ -29,7 +52,7 @@ const Login = () => {
           <p className="px-3 text-gray-400">OR</p>
           <hr className="w-full text-gray-400" />
         </div>
-        <form noValidate="" action="" className="space-y-8">
+        <form noValidate="" onSubmit={handleSubmitForm} className="space-y-8">
           <div className="space-y-4">
             <div className="space-y-2">
               <label htmlFor="email" className="block text-sm">
@@ -48,13 +71,13 @@ const Login = () => {
                 <label htmlFor="password" className="text-sm">
                   Password
                 </label>
-                <a
+                <Link
                   rel="noopener noreferrer"
-                  href="#"
+                  to="/reset-password"
                   className="text-xs hover:underline text-gray-400"
                 >
                   Forgot password?
-                </a>
+                </Link>
               </div>
               <input
                 type="password"

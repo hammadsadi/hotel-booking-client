@@ -4,6 +4,13 @@ import Home from "../pages/Home/Home";
 import Login from "../pages/Auth/Login";
 import SignUp from "../pages/Auth/SignUp";
 import ResetPassword from "../pages/ResetPassword/ResetPassword";
+import Dashboard from "../Layout/Dashboard";
+import Bookings from "../pages/dashboard/Bookings/Bookings";
+import Hotels from "../pages/dashboard/Hotels/Hotels";
+import Rooms from "../pages/dashboard/Rooms/Rooms";
+import Reports from "../pages/dashboard/Reports/Reports";
+import PrivateRoutes from "../providers/PrivateRoutes";
+import AdminPrivate from "./AdminPrivate";
 
 const router = createBrowserRouter([
   {
@@ -27,6 +34,45 @@ const router = createBrowserRouter([
   {
     path: "/reset-password",
     element: <ResetPassword />,
+  },
+  // Dashboard
+  {
+    path: "/dashboard",
+    element: (
+      <PrivateRoutes>
+        <Dashboard />
+      </PrivateRoutes>
+    ),
+    children: [
+      {
+        index: true,
+        element: <Bookings />,
+      },
+      {
+        path: "hotels",
+        element: (
+          <AdminPrivate>
+            <Hotels />
+          </AdminPrivate>
+        ),
+      },
+      {
+        path: "rooms",
+        element: (
+          <AdminPrivate>
+            <Rooms />
+          </AdminPrivate>
+        ),
+      },
+      {
+        path: "reports",
+        element: (
+          <AdminPrivate>
+            <Reports />
+          </AdminPrivate>
+        ),
+      },
+    ],
   },
 ]);
 

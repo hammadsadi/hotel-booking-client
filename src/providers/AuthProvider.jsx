@@ -3,6 +3,7 @@ import { createContext, useEffect, useState } from "react";
 import {
   GoogleAuthProvider,
   createUserWithEmailAndPassword,
+  getAuth,
   onAuthStateChanged,
   sendPasswordResetEmail,
   signInWithEmailAndPassword,
@@ -11,9 +12,10 @@ import {
   updateProfile,
 } from "firebase/auth";
 import axios from "axios";
-import auth from "../firebase/firebase.config";
+import { app } from "../firebase/firebase.config";
 export const AuthContext = createContext(null);
 const googleProvider = new GoogleAuthProvider();
+const auth = getAuth(app);
 
 const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
@@ -41,7 +43,7 @@ const AuthProvider = ({ children }) => {
 
   const logOut = async () => {
     setLoading(true);
-    await axios.get(`${import.meta.env.VITE_API_URL}/logout`, {
+    await axios.get(`${import.meta.env.VITE_API_URL}/api/v1/user/logout`, {
       withCredentials: true,
     });
     return signOut(auth);
@@ -56,7 +58,7 @@ const AuthProvider = ({ children }) => {
   // Get token from server
   const getToken = async (email) => {
     const { data } = await axios.post(
-      `${import.meta.env.VITE_API_URL}/jwt`,
+      `${import.meta.env.VITE_API_URL}/api/v1/user/jwt`,
       { email },
       { withCredentials: true }
     );
@@ -68,11 +70,10 @@ const AuthProvider = ({ children }) => {
     const userInfo = {
       name: user?.displayName,
       email: user?.email,
-      role: "guest",
-      status: "verified",
+      photo: user?.photoURL,
     };
-    const { data } = axios.put(
-      `${import.meta.env.VITE_API_URL}/user`,
+    const { data } = axios.post(
+      `${import.meta.env.VITE_API_URL}/api/v1/user`,
       userInfo
     );
   };
@@ -111,7 +112,7 @@ const AuthProvider = ({ children }) => {
 
 AuthProvider.propTypes = {
   // Array of children.
-  children: PropTypes.array,
+  children: PropTypes.element,
 };
 
 export default AuthProvider;

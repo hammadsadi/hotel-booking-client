@@ -9,6 +9,7 @@ import toastAlert from "../../../utils/toastAlert";
 import useGetAllHotels from "../../../hooks/useGetAllHotels";
 import HotelEditForm from "../../../components/Dashboard/Forms/HotelEditForm";
 import DeletePopup from "../../../components/Shared/DeletePopup/DeletePopup";
+import THeadItem from "../../../components/Shared/TableHeading/THeadItem";
 
 const Hotels = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -191,43 +192,12 @@ const Hotels = () => {
               <table className="min-w-full leading-normal">
                 <thead>
                   <tr>
-                    <th
-                      scope="col"
-                      className="px-5 py-3 bg-white  border-b border-gray-200 text-gray-800  text-left text-sm capitalize font-normal"
-                    >
-                      Name
-                    </th>
-                    <th
-                      scope="col"
-                      className="px-5 py-3 bg-white  border-b border-gray-200 text-gray-800  text-left text-sm capitalize font-normal"
-                    >
-                      Owner
-                    </th>
-                    <th
-                      scope="col"
-                      className="px-5 py-3 bg-white  border-b border-gray-200 text-gray-800  text-left text-sm capitalize font-normal"
-                    >
-                      email
-                    </th>
-                    <th
-                      scope="col"
-                      className="px-5 py-3 bg-white  border-b border-gray-200 text-gray-800  text-left text-sm capitalize font-normal"
-                    >
-                      Phone
-                    </th>
-
-                    <th
-                      scope="col"
-                      className="px-5 py-3 bg-white  border-b border-gray-200 text-gray-800  text-left text-sm capitalize font-normal"
-                    >
-                      Created At
-                    </th>
-                    <th
-                      scope="col"
-                      className="px-5 py-3 bg-white  border-b border-gray-200 text-gray-800  text-left text-sm capitalize font-normal"
-                    >
-                      Action
-                    </th>
+                    <THeadItem thHeading="Name" />
+                    <THeadItem thHeading="Owner" />
+                    <THeadItem thHeading="email" />
+                    <THeadItem thHeading="Phone" />
+                    <THeadItem thHeading="Created At" />
+                    <THeadItem thHeading="Action" />
                   </tr>
                 </thead>
                 <tbody>

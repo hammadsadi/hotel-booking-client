@@ -2,27 +2,15 @@ import PropTypes from "prop-types";
 import { LuTrash } from "react-icons/lu";
 import { FaPenToSquare } from "react-icons/fa6";
 import { MdOutlineAddBox } from "react-icons/md";
+import TDataItem from "../TDataItem/TDataItem";
 
 const HotelDataRow = ({ hotel, handleEditOpenModal, handleDeleteHotel }) => {
   return (
     <tr>
-      <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-        <div className="flex items-center">
-          <p className="text-gray-900 whitespace-no-wrap">{hotel?.name}</p>
-        </div>
-      </td>
-      <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-        <div className="flex items-center">
-          <p className="text-gray-900 whitespace-no-wrap">{hotel?.owner} </p>
-        </div>
-      </td>
-      <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-        <p className="text-gray-900 whitespace-no-wrap">{hotel?.email}</p>
-      </td>
-      <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-        <p className="text-gray-900 whitespace-no-wrap">{hotel?.phone}</p>
-      </td>
-
+      <TDataItem tData={hotel?.name} />
+      <TDataItem tData={hotel?.owner} />
+      <TDataItem tData={hotel?.email} />
+      <TDataItem tData={hotel?.phone} />
       <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
         <p className="text-gray-900 whitespace-no-wrap">
           {new Date(hotel?.createdAt).toLocaleDateString("en-US", {

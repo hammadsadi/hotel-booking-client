@@ -1,6 +1,7 @@
 import PropTypes from "prop-types";
 import { ImSpinner2 } from "react-icons/im";
 import { useEffect, useState } from "react";
+import { RxCross1 } from "react-icons/rx";
 
 const HotelEditForm = ({
   handleEditSubmitForm,
@@ -9,11 +10,21 @@ const HotelEditForm = ({
   singleHotel,
 }) => {
   const [prevImages, setPrevImages] = useState([]);
-
+  const [existImages, setExistImage] = useState(singleHotel?.media);
+  const [selectedImages, setSelectedImages] = useState([]);
   // Handle Prev Image
   const handlePrevImage = (e) => {
     const files = Array.from(e.target.files);
-    setPrevImages(files);
+    const newImages = files.map((file) => ({
+      file,
+      preview: URL.createObjectURL(file),
+    }));
+    setPrevImages([...prevImages, ...newImages]);
+    setSelectedImages(files);
+  };
+  const removeImage = (index) => {
+    setPrevImages(prevImages.filter((_, i) => i !== index));
+    setSelectedImages(selectedImages.filter((rm, rmIdx) => rmIdx !== index));
   };
   // Reset Form
   useEffect(() => {
@@ -28,8 +39,7 @@ const HotelEditForm = ({
       </h2>
       <div>
         <form
-          noValidate=""
-          onSubmit={handleEditSubmitForm}
+          onSubmit={(e) => handleEditSubmitForm(e, existImages, selectedImages)}
           className="space-y-8"
         >
           <div className="flex gap-2">
@@ -129,29 +139,43 @@ const HotelEditForm = ({
             </div>
           </div>
           <div className="flex gap-2 justify-center text-center">
-            {prevImages.length > 0 ? (
+            {prevImages.length > 0 && (
               <>
-                {prevImages.map((item) => (
-                  <img
-                    key={item.name}
-                    src={URL.createObjectURL(item)}
-                    alt=""
-                    className="w-20 h-20 object-cover"
-                  />
+                {prevImages.map((prevItem, prevIdx) => (
+                  <div key={prevIdx} className="relative">
+                    <img
+                      src={prevItem.preview}
+                      alt=""
+                      className="w-20 h-20 object-cover"
+                    />
+                    <span
+                      onClick={() => removeImage(prevIdx)}
+                      className="absolute top-1 right-1 text-primary cursor-pointer"
+                    >
+                      <RxCross1 />
+                    </span>
+                  </div>
                 ))}
               </>
-            ) : (
-              <div className="flex gap-2 justify-center">
-                {singleHotel?.media?.map((img, idx) => (
-                  <img
-                    key={idx}
-                    src={img}
-                    alt=""
-                    className="w-20 h-20 object-cover"
-                  />
-                ))}
-              </div>
             )}
+
+            <div className="flex gap-2 justify-center ">
+              {existImages.map((img, idx) => (
+                <div key={idx} className="relative">
+                  <img src={img} alt="" className="w-20 h-20 object-cover" />
+                  <span
+                    onClick={() => {
+                      setExistImage(
+                        existImages.filter((it, index) => index !== idx)
+                      );
+                    }}
+                    className="absolute top-1 right-1 text-primary cursor-pointer"
+                  >
+                    <RxCross1 />
+                  </span>
+                </div>
+              ))}
+            </div>
           </div>
           <button
             type="submit"

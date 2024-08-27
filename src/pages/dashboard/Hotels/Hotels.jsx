@@ -32,7 +32,7 @@ const Hotels = () => {
   };
 
   // handleSubmitForm
-  const handleSubmitForm = async (e) => {
+  const handleSubmitForm = async (e, selectedImages) => {
     e.preventDefault();
     const form = e.target;
     const name = form.hotelName.value;
@@ -40,10 +40,9 @@ const Hotels = () => {
     const email = form.email.value;
     const phone = form.phoneNumber.value;
     const location = form.location.value;
-    const hotelPhoto = Array.from(form.hotelPhoto.files);
     try {
       setHotelLoading(true);
-      const uploadedImage = await uploadImageToFirebase(hotelPhoto);
+      const uploadedImage = await uploadImageToFirebase(selectedImages);
       const hotelInfo = {
         name,
         email,
@@ -58,6 +57,7 @@ const Hotels = () => {
         e.target.reset();
         setRestImage(true);
         toastAlert("Hotel Created Successful", "success");
+        refetch();
       }
     } catch (error) {
       setHotelLoading(false);
@@ -79,7 +79,7 @@ const Hotels = () => {
   };
 
   // handleEditSubmitForm
-  const handleEditSubmitForm = async (e) => {
+  const handleEditSubmitForm = async (e, existImages, selectedImages) => {
     e.preventDefault();
     const form = e.target;
     const name = form.hotelName.value;
@@ -90,10 +90,11 @@ const Hotels = () => {
     const hotelPhoto = Array.from(form.hotelPhoto.files);
     try {
       setHotelLoading(true);
-      let editedPhoto = singleHotel.media;
+      let editedPhoto = existImages;
+      console.log("From Edit", selectedImages);
       if (hotelPhoto.length > 0) {
-        const uploadedImage = await uploadImageToFirebase(hotelPhoto);
-        editedPhoto = uploadedImage;
+        const uploadedImage = await uploadImageToFirebase(selectedImages);
+        editedPhoto = [...uploadedImage, ...existImages];
       }
       const hotelEditInfo = {
         name,

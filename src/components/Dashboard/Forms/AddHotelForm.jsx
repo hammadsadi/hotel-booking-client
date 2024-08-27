@@ -1,15 +1,26 @@
 import PropTypes from "prop-types";
-import imagePreviewIcon from "../../../assets/images/img.svg";
 import { ImSpinner2 } from "react-icons/im";
 import { useEffect, useState } from "react";
+import { RxCross1 } from "react-icons/rx";
 
 const AddHotelForm = ({ handleSubmitForm, hotelLoading, resetImage }) => {
   const [prevImages, setPrevImages] = useState([]);
+  const [selectedImages, setSelectedImages] = useState([]);
 
   // Handle Prev Image
   const handlePrevImage = (e) => {
     const files = Array.from(e.target.files);
-    setPrevImages(files);
+    const newImages = files.map((file) => ({
+      file,
+      preview: URL.createObjectURL(file),
+    }));
+    setPrevImages([...prevImages, ...newImages]);
+    setSelectedImages(files);
+  };
+
+  const removeImage = (index) => {
+    setPrevImages(prevImages.filter((_, i) => i !== index));
+    setSelectedImages(selectedImages.filter((rm, rmIdx) => rmIdx !== index));
   };
 
   // Reset Form
@@ -24,7 +35,11 @@ const AddHotelForm = ({ handleSubmitForm, hotelLoading, resetImage }) => {
         Add New Hotel
       </h2>
       <div>
-        <form noValidate="" onSubmit={handleSubmitForm} className="space-y-8">
+        <form
+          noValidate=""
+          onSubmit={(e) => handleSubmitForm(e, selectedImages)}
+          className="space-y-8"
+        >
           <div className="flex gap-2">
             <div className="space-y-2">
               <label
@@ -117,20 +132,21 @@ const AddHotelForm = ({ handleSubmitForm, hotelLoading, resetImage }) => {
             </div>
           </div>
           <div className="flex gap-2 justify-center text-center">
-            {prevImages ? (
-              <>
-                {prevImages.map((item) => (
-                  <img
-                    key={item.name}
-                    src={URL.createObjectURL(item)}
-                    alt=""
-                    className="w-20 h-20 object-cover"
-                  />
-                ))}
-              </>
-            ) : (
-              <img src={imagePreviewIcon} alt="" className="w-20 mx-auto" />
-            )}
+            {prevImages.map((img, idx) => (
+              <div key={idx} className="relative">
+                <img
+                  src={img.preview}
+                  alt=""
+                  className="w-20 h-20 object-cover"
+                />
+                <span
+                  onClick={() => removeImage(idx)}
+                  className="absolute top-1 right-1 text-primary cursor-pointer"
+                >
+                  <RxCross1 />
+                </span>
+              </div>
+            ))}
           </div>
           <button
             type="submit"

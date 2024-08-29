@@ -111,7 +111,6 @@ const AuthProvider = ({ children }) => {
 };
 
 AuthProvider.propTypes = {
-  // Array of children.
   children: PropTypes.element,
 };
 

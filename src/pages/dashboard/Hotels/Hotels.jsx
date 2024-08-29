@@ -41,6 +41,11 @@ const Hotels = () => {
     const email = form.email.value;
     const phone = form.phoneNumber.value;
     const location = form.location.value;
+
+    // Validation
+    if (!name || !owner || !email || !phone || !location) {
+      return toastAlert("All Fields Are Required", "error");
+    }
     try {
       setHotelLoading(true);
       const uploadedImage = await uploadImageToFirebase(selectedImages);
@@ -92,7 +97,6 @@ const Hotels = () => {
     try {
       setHotelLoading(true);
       let editedPhoto = existImages;
-      console.log("From Edit", selectedImages);
       if (hotelPhoto.length > 0) {
         const uploadedImage = await uploadImageToFirebase(selectedImages);
         editedPhoto = [...uploadedImage, ...existImages];

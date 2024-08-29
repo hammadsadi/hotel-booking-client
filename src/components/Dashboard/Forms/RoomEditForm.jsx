@@ -1,12 +1,13 @@
 import PropTypes from "prop-types";
 import { ImSpinner2 } from "react-icons/im";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { RxCross1 } from "react-icons/rx";
 import useGetAllHotels from "../../../hooks/useGetAllHotels";
 
-const AddRoomForm = ({ handleSubmitForm, roomLoading, resetImage }) => {
+const RoomEditForm = ({ handleSubmitForm, roomLoading, singleRoom }) => {
   const [prevImages, setPrevImages] = useState([]);
   const [selectedImages, setSelectedImages] = useState([]);
+  const [existImages, setExistImage] = useState(singleRoom?.photo);
   const [hotels] = useGetAllHotels();
 
   // Handle Prev Image
@@ -25,21 +26,15 @@ const AddRoomForm = ({ handleSubmitForm, roomLoading, resetImage }) => {
     setSelectedImages(selectedImages.filter((rm, rmIdx) => rmIdx !== index));
   };
 
-  // Reset Form
-  useEffect(() => {
-    if (resetImage) {
-      setPrevImages([]);
-    }
-  }, [resetImage]);
   return (
     <div>
       <h2 className="text-lg text-center mb-5 md:text-2xl font-bold">
-        Add New Room
+        Update Room
       </h2>
       <div>
         <form
           noValidate=""
-          onSubmit={(e) => handleSubmitForm(e, selectedImages)}
+          onSubmit={(e) => handleSubmitForm(e, selectedImages, existImages)}
           className="space-y-8"
         >
           <div className="flex gap-2">
@@ -55,9 +50,15 @@ const AddRoomForm = ({ handleSubmitForm, roomLoading, resetImage }) => {
                 id=""
                 className="w-full px-3 py-2 border rounded-md border-gray-100 outline-none bg-gray-100 text-gray-800 focus:border-primary transition-all duration-200"
               >
-                <option>Select Hotel</option>
+                {/* <option>Select Hotel</option> */}
                 {hotels?.map((hotel) => (
-                  <option value={hotel?._id} key={hotel._id}>
+                  <option
+                    value={hotel?._id}
+                    key={hotel._id}
+                    selected={
+                      hotels?.name === singleRoom?.hotel?.name ? true : false
+                    }
+                  >
                     {hotel?.name}
                   </option>
                 ))}
@@ -69,6 +70,7 @@ const AddRoomForm = ({ handleSubmitForm, roomLoading, resetImage }) => {
               </label>
               <input
                 type="text"
+                defaultValue={singleRoom?.roomName}
                 name="roomName"
                 id="roomName"
                 placeholder="Couple Special..."
@@ -86,6 +88,7 @@ const AddRoomForm = ({ handleSubmitForm, roomLoading, resetImage }) => {
               </label>
               <input
                 type="number"
+                defaultValue={singleRoom?.roomNumber}
                 name="roomNumber"
                 id="name"
                 placeholder="0"
@@ -102,9 +105,24 @@ const AddRoomForm = ({ handleSubmitForm, roomLoading, resetImage }) => {
                 className="w-full px-3 py-2 border rounded-md border-gray-100 outline-none bg-gray-100 text-gray-800 focus:border-primary transition-all duration-200"
               >
                 <option>Select Type</option>
-                <option value="basic">Basic</option>
-                <option value="standard">Standard</option>
-                <option value="premium">Premium</option>
+                <option
+                  value="basic"
+                  selected={singleRoom?.type === "basic" ? true : false}
+                >
+                  Basic
+                </option>
+                <option
+                  value="standard"
+                  selected={singleRoom?.type === "standard" ? true : false}
+                >
+                  Standard
+                </option>
+                <option
+                  value="premium"
+                  selected={singleRoom?.type === "premium" ? true : false}
+                >
+                  Premium
+                </option>
               </select>
             </div>
           </div>
@@ -116,6 +134,7 @@ const AddRoomForm = ({ handleSubmitForm, roomLoading, resetImage }) => {
               <input
                 type="number"
                 name="bedrooms"
+                defaultValue={singleRoom?.bedrooms}
                 id="bedrooms"
                 placeholder="Bedrooms"
                 className="w-full px-3 py-2 border rounded-md border-gray-100 outline-none bg-gray-100 text-gray-800 focus:border-primary transition-all duration-200"
@@ -131,6 +150,7 @@ const AddRoomForm = ({ handleSubmitForm, roomLoading, resetImage }) => {
               <input
                 type="number"
                 name="rentPerDay"
+                defaultValue={singleRoom?.rentPerDay}
                 id="rentPerDay"
                 placeholder="Rent Per day"
                 className="w-full px-3 py-2 border rounded-md border-gray-100 outline-none bg-gray-100 text-gray-800 focus:border-primary transition-all duration-200"
@@ -148,6 +168,7 @@ const AddRoomForm = ({ handleSubmitForm, roomLoading, resetImage }) => {
               <textarea
                 name="amenities"
                 id="amenities"
+                defaultValue={singleRoom?.amenities}
                 placeholder="Amenities"
                 className="w-full px-3 py-2 border rounded-md border-gray-100 outline-none bg-gray-100 text-gray-800 focus:border-primary transition-all duration-200"
               ></textarea>
@@ -170,6 +191,23 @@ const AddRoomForm = ({ handleSubmitForm, roomLoading, resetImage }) => {
             </div>
           </div>
           <div className="flex gap-2 justify-center text-center">
+            <div className="flex gap-2 justify-center ">
+              {existImages.map((img, idx) => (
+                <div key={idx} className="relative">
+                  <img src={img} alt="" className="w-20 h-20 object-cover" />
+                  <span
+                    onClick={() => {
+                      setExistImage(
+                        existImages.filter((it, index) => index !== idx)
+                      );
+                    }}
+                    className="absolute top-1 right-1 text-primary cursor-pointer"
+                  >
+                    <RxCross1 />
+                  </span>
+                </div>
+              ))}
+            </div>
             {prevImages.map((img, idx) => (
               <div key={idx} className="relative">
                 <img
@@ -194,7 +232,7 @@ const AddRoomForm = ({ handleSubmitForm, roomLoading, resetImage }) => {
             {roomLoading ? (
               <ImSpinner2 className="animate-spin m-auto" />
             ) : (
-              "Create"
+              "Update"
             )}
           </button>
         </form>
@@ -202,10 +240,10 @@ const AddRoomForm = ({ handleSubmitForm, roomLoading, resetImage }) => {
     </div>
   );
 };
-AddRoomForm.propTypes = {
+RoomEditForm.propTypes = {
   handleSubmitForm: PropTypes.func,
-  resetImage: PropTypes.bool,
+  singleRoom: PropTypes.object,
   roomLoading: PropTypes.bool,
 };
 
-export default AddRoomForm;
+export default RoomEditForm;

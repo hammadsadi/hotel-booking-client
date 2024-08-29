@@ -1,7 +1,6 @@
 import PropTypes from "prop-types";
 import { LuTrash } from "react-icons/lu";
 import { FaPenToSquare } from "react-icons/fa6";
-import { MdOutlineAddBox } from "react-icons/md";
 import TDataItem from "../TDataItem/TDataItem";
 
 const HotelDataRow = ({ hotel, handleEditOpenModal, handleDeleteHotel }) => {
@@ -40,11 +39,6 @@ const HotelDataRow = ({ hotel, handleEditOpenModal, handleDeleteHotel }) => {
         >
           <span className="">
             <LuTrash />
-          </span>
-        </span>
-        <span className=" cursor-pointer inline-block  font-semibold text-green-700 leading-tight -mb-[1px]">
-          <span className="">
-            <MdOutlineAddBox size={16} />
           </span>
         </span>
       </td>

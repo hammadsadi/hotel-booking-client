@@ -11,6 +11,7 @@ import Rooms from "../pages/dashboard/Rooms/Rooms";
 import Reports from "../pages/dashboard/Reports/Reports";
 import PrivateRoutes from "../providers/PrivateRoutes";
 import AdminPrivate from "./AdminPrivate";
+import RoomDetails from "../pages/RoomDetails/RoomDetails";
 
 const router = createBrowserRouter([
   {
@@ -20,6 +21,10 @@ const router = createBrowserRouter([
       {
         index: true,
         element: <Home />,
+      },
+      {
+        path: "/room/:id",
+        element: <RoomDetails />,
       },
     ],
   },

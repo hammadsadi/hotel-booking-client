@@ -1,16 +1,17 @@
 import PropTypes from "prop-types";
+import { Link } from "react-router-dom";
 const HotelItem = ({ room }) => {
   return (
     <div>
-      <a
-        href="#"
-        className="flex flex-col rounded-lg p-4 shadow-sm bg-white shadow-indigo-100 "
+      <Link
+        to={`/room/${room?._id}`}
+        className="flex group flex-col rounded-lg p-4 shadow-sm bg-white shadow-indigo-100 "
       >
         <div className="flex-1">
           <img
             alt=""
             src={room?.photo[0]}
-            className="w-full h-[250px] object-cover"
+            className="w-full h-[250px] object-cover group-hover:scale-105 transition-all duration-300"
           />
         </div>
 
@@ -80,7 +81,7 @@ const HotelItem = ({ room }) => {
             </div>
           </div>
         </div>
-      </a>
+      </Link>
     </div>
   );
 };
